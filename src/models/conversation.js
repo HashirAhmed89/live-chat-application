@@ -1,32 +1,39 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
-export const conversationSchema=new mongoose.Schema(
-    customerId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
-        required:true,
-    },
-    assignagentId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
-    },
-    status:{
-        type:String,
-        enum:[open,close],
-        default:open
-
-    },
-    lastMsg:{
-        type:date,
-        default:null
+const conversationSchema = new mongoose.Schema(
+  {
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     },
 
-    {
-        TimeStamp:true
+    assignedAgentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null
+    },
+
+    status: {
+      type: String,
+      enum: ["open", "close"],
+      default: "open"
+    },
+
+    lastMessageAt: {
+      type: Date,
+      default: null
     }
+  },
+  {
+    timestamps: true
+  }
+);
 
-)
+const Conversation = mongoose.model(
+  "Conversation",
+  conversationSchema
+);
 
-const Conversation=mongoose.model(
-    "conversation",conversationSchema
-)
+export default Conversation;
+

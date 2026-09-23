@@ -1,29 +1,40 @@
-import mongoose from "mongoose"
 
-export const message = new moongose.model(
-    conversationId:{moongose.Schema.Types.ObjectId,
-    ref:"conversation",
-    required:true
-    },
-    senderId:{
-        moongose.Schema.Types.ObjectId,
-        ref:"user",
-        required:true
+import mongoose from "mongoose";
 
+const messageSchema = new mongoose.Schema(
+  {
+    conversationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Conversation",
+      required: true
     },
-    senderType:{
-        type:"String",
-        enum:["customer","agent","admin"],
 
+    senderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     },
-    content:{
-        type:"String",
-        required:true,
-        trim:true
-    },{
-        TimeStamp:true
+
+    senderType: {
+      type: String,
+      enum: ["customer", "agent", "admin"],
+      required: true
+    },
+
+    content: {
+      type: String,
+      required: true,
+      trim: true
     }
-)
-export const message=moongose.model(
-    "message",message
-    )
+  },
+  {
+    timestamps: true
+  }
+);
+
+const Message = mongoose.model(
+  "Message",
+  messageSchema
+);
+
+export default Message;
