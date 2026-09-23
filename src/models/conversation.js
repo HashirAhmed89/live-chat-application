@@ -25,7 +25,6 @@ export const conversationSchema=new mongoose.Schema(
         TimeStamp:true
     }
 
-
 )
 
 const Conversation=mongoose.model(
