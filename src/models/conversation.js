@@ -4,13 +4,11 @@ const conversationSchema = new mongoose.Schema(
   {
     customerId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
       required: true
     },
 
     assignedAgentId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
       default: null
     },
 
@@ -28,7 +26,8 @@ const conversationSchema = new mongoose.Schema(
   {
     timestamps: true
   }
-);
+)
+
 
 const Conversation = mongoose.model(
   "Conversation",
@@ -36,4 +35,3 @@ const Conversation = mongoose.model(
 );
 
 export default Conversation;
-

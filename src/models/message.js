@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema(
@@ -26,6 +25,7 @@ const messageSchema = new mongoose.Schema(
       required: true,
       trim: true
     }
+  
   },
   {
     timestamps: true

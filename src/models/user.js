@@ -3,6 +3,12 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    visitorId:{
+      type:String,
+      required:true,
+
+
+    },
     name: {
       type: String,
       required: true,
