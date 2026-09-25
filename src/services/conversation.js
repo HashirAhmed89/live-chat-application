@@ -16,3 +16,7 @@ export const findOrCreateConversation = async ({ customerId }) => {
   }
   return conversation;
 };
+
+  export const  getConversation=()=>{
+
+}

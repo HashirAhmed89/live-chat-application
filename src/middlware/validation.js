@@ -1,23 +1,36 @@
 import { body } from "express-validator";
 
-const customerValidation = [
-  body("name")
+export const messageValidation = [
+  body("visitorId")
+    .trim()
     .notEmpty()
-    .withMessage("Name is Required")
-    .isString()
-    .isLength({ min: 3, max: 10 })
-    .isAlpha(),
+    .withMessage("visitorId is required"),
+
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("Name is required")
+    .isLength({ min: 2, max: 50 })
+    .withMessage("Name must be between 2 and 50 characters"),
 
   body("email")
-    .isEmail()
-    .withMessage("Valid email is required")
-    .normalizeEmail(),
-
-  body("password")
+    .trim()
     .notEmpty()
-    .withMessage("Password is required")
-    .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters"),
-];
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Please enter a valid email"),
 
-export default customerValidation;
+  body("subject")
+    .trim()
+    .notEmpty()
+    .withMessage("Subject is required")
+    .isLength({ max: 100 })
+    .withMessage("Subject cannot exceed 100 characters"),
+
+  body("content")
+    .trim()
+    .notEmpty()
+    .withMessage("Message content is required")
+    .isLength({ min: 1, max: 2000 })
+    .withMessage("Message must be between 1 and 2000 characters")
+];
