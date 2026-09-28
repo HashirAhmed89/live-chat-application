@@ -3,14 +3,8 @@ import { findOrCreateTicket } from "./ticket.js";
 import { findOrCreateCustomer } from "./user.js";
 import { findOrCreateConversation } from "./conversation.js";
 
-export const send = async ({
-  visitorId,
-  name,
-  email,
-  subject,
-  content
-}) => {
-
+export const send = async ({ visitorId, name, email, subject, content }) => {
+  
   const customer = await findOrCreateCustomer({
     visitorId,
     name,
@@ -18,43 +12,41 @@ export const send = async ({
   });
 
   const conversation = await findOrCreateConversation({
-    customerId: customer._id
+    customerId: customer._id,
   });
 
   const ticket = await findOrCreateTicket({
     customerId: customer._id,
     conversationId: conversation._id,
-    subject
+    subject,
   });
 
   const message = await createMessage({
     conversationId: conversation._id,
     senderId: customer._id,
     senderType: "customer",
-    content
+    content,
   });
 
   return {
     customer,
     conversation,
     ticket,
-    message
+    message,
   };
 };
-
 
 export const createMessage = async ({
   conversationId,
   senderId,
   senderType,
-  content
+  content,
 }) => {
-
   const message = await Message.create({
     conversationId,
     senderId,
     senderType,
-    content
+    content,
   });
 
   return message;

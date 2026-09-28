@@ -1,8 +1,10 @@
-export const userController = async (req, res) => {
+import { findOrCreateCustomer } from "../services/user.js";
+
+export const createCustomer = async (req, res) => {
   try {
     const { visitorId, name, email, password, role } = req.body;
 
-    let customer = await findOrCreate({
+    let customer = await findOrCreateCustomer({
       visitorId,
       name,
       email,
@@ -15,6 +17,28 @@ export const userController = async (req, res) => {
     return res.status(500).json({
       sucess: false,
       message: error.message,
+    });
+  }
+};
+
+ export const createAgent = async ({ req, res }) => {
+  
+  try {
+    const { name, email, password, confirmPassword } = req.body;
+    
+
+    const agent = await findOrCreateAgent({
+      name,
+      email,
+      password,
+      confirmPassword,
+    });
+
+    return res.status(200).json({ agent, message: "Agent Created " });
+  } catch (error) {
+    return res.status(500).json({
+      sucess: false,
+      message: error.message || "Invalid Credeintials",
     });
   }
 };

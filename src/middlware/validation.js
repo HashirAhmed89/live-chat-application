@@ -34,3 +34,22 @@ export const messageValidation = [
     .isLength({ min: 1, max: 2000 })
     .withMessage("Message must be between 1 and 2000 characters")
 ];
+
+// login
+
+export const loginValidation = [
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("Email is required")
+    .bail()
+    .isEmail()
+    .withMessage("Please enter a valid email"),
+
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required")
+    .bail()
+    .isString()
+    .withMessage("Password must be a string")
+]

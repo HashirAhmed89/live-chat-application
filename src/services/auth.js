@@ -1,44 +1,33 @@
-// import User from "../models/user.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../models/user.js";
 
-// const register = async ({ name, email, password }) => {
-//   try {
-//     const existingUser = await User.findOne({ email })
-//     if (existingUser) {
-//       throw new error("user already exits");
-//     }
-//     const hashedPassword = await bcrypt.hash(password, 10)
-//     const user = await User.create({
-//       name,
-//       email,
-//       password: hashedPassword
-//     })
-//     return user;
+export const authAttempt = async ({ email, password }) => {
+  const user = await User.findOne({
+    email,
+    role: "Agent",
+  });
 
-//     const login = async ({ email, password }) => {
-//       const user = await User.findOne({ email })
-//       if (!user) {
-//         throw new Error("invalid email or password")
-//       }
-//       const isMatched=await bcrypt.compare(password,user.password)
-//       if(!isMatched){
-//         throw new Error("Invalid email or password")
-//       }
-//       const token=jwt.sign(
-//         {
-//             user_Id:user_id,
-//             email:user.email
-//         },
-//         JWT_SECRET,{
-//             expiresIn:"1d"
-//         }
-//       )
-//       return {
-//         token,
-//         user
-//       }
+  if (!user) {
+    throw new Error("Invalid credentials");
+  }
 
-//     }
-//   } catch (error) {
-//     console.log(error, "error");
-//   }
-// };
+  const isMatched = await bcrypt.compare(password, user.password);
+
+  if (!isMatched) {
+    throw new Error("Invalid credentials");
+  }
+
+  const token = jwt.sign(
+    {
+      user: user._id,
+      role: user.role,
+    },
+    process.env.JWT_SECRET_KEY,
+    {
+      expiresIn: "1h",
+    },
+  );
+
+  return token;
+};

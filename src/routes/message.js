@@ -1,8 +1,9 @@
 import express from "express";
-import { sendMessage } from "../controllers/message.js";
 import { messageValidation } from "../middlware/validation.js";
+import { sendMessage } from "../controllers/message.js";
 
 export const router = express.Router();
+
 router.post(
     "/", 
     messageValidation, 
