@@ -1,4 +1,5 @@
 import { findOrCreateCustomer } from "../services/user.js";
+import { findOrCreateAgent } from "../services/user.js";
 
 export const createCustomer = async (req, res) => {
   try {
@@ -21,24 +22,31 @@ export const createCustomer = async (req, res) => {
   }
 };
 
- export const createAgent = async ({ req, res }) => {
-  
+
+export const createAgent = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword } = req.body;
-    
+    const { visitorId, name, email, password, confirmPassword } = req.body;
+
+    console.log(name, email, "CONTROLLER HIT");
 
     const agent = await findOrCreateAgent({
+      visitorId,
       name,
       email,
       password,
       confirmPassword,
     });
 
-    return res.status(200).json({ agent, message: "Agent Created " });
+    return res.status(201).json({
+      success: true,
+      agent,
+      message: "Agent Created",
+    });
+
   } catch (error) {
     return res.status(500).json({
-      sucess: false,
-      message: error.message || "Invalid Credeintials",
+      success: false,
+      message: error.message || "Invalid Credentials",
     });
   }
 };
