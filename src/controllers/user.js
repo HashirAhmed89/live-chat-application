@@ -27,8 +27,6 @@ export const createAgent = async (req, res) => {
   try {
     const { visitorId, name, email, password, confirmPassword } = req.body;
 
-    console.log(name, email, "CONTROLLER HIT");
-
     const agent = await findOrCreateAgent({
       visitorId,
       name,
