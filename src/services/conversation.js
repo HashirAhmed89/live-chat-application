@@ -12,29 +12,28 @@ export const findOrCreateConversation = async ({ customerId }) => {
   if (!conversation) {
     conversation = await Conversation.create({
       customerId: customerId,
-      assignedAgentId:'6abbc348309020b3efd3b66f'
+      assignedAgentId: "6abbc348309020b3efd3b66f",
     });
   }
   return conversation;
 };
 
 export const getAllConversation = async ({ userId, role }) => {
-  console.log(userId, role, "user,role")
+  console.log(userId, role, "user,role");
 
-  const filter = role === "Agent" ? { assignedAgentId: userId } : {}
-  
-  return await Conversation.find(filter)
+  const filter = role === "Agent" ? { assignedAgentId: userId } : {};
+
+  return await Conversation.find(filter);
 };
 
-// export const getConversationById = async ({ conversationId, role, userId }) => {
-//   console.log(conversationId, role, userId);
+export const getConversationById = async ({ conversationId, role, userId }) => {
+  console.log(conversationId, role, userId);
 
-//   const filtering = { _id: conversationId };
+  const filtering = { _id: conversationId };
 
-//   if (role === " Agent") {
-//     filtering.assignedAgentId = userId;
-//   }
-//   filtering = await sort(lastMessageAt - 1);
+  if (role === " Agent") {
+    filtering.assignedAgentId = userId;
+  }
 
-//   return await Conversation.findOne(filtering)
-// };
+  return await Conversation.findOne(filtering);
+};

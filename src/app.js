@@ -22,4 +22,8 @@ app.use("/api/agent",userRoutes);
 
 app.use("/api/conversations",conversationRoutes);
 
+// get conversation by ID 
+
+app.use("/api/:conversation",conversationRoutes);
+
 export default app;
