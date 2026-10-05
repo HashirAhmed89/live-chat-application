@@ -23,7 +23,7 @@ export const getAllConversation = async ({ userId, role }) => {
 
   const filter = role === "Agent" ? { assignedAgentId: userId } : {};
 
-  return await Conversation.find(filter);
+  return await Conversation.find(filter).sort({lastMessageAt:-1});
 };
 
 export const getConversationById = async ({ conversationId, role, userId }) => {
