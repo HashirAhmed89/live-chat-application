@@ -5,7 +5,7 @@ import { loginValidation } from "../middlware/validation.js";
 const router = express.Router();
 
 router.post(
-    "/", 
+    "/login",
     loginValidation,
     login
     
