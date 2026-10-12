@@ -26,32 +26,33 @@ export const findOrCreateCustomer = async ({ visitorId, name, email }) => {
 };
 
 
-export const findOrCreateAgent = async ({
+export const findOrCreateUser = async ({
   visitorId,
   name,
   email,
   password,
   confirmPassword,
+  role
 }) => {
-  const existingAgent = await User.findOne({
+  const existingUser = await User.findOne({
     email,
-    role: "Agent",
+    role: "Agent||Admin",
   });
 
-  if (existingAgent) {
+  if (existingUser) {
     throw new Error("Agent already exists");
   }
 
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const agent = await User.create({
+  const user = await User.create({
     visitorId,
     name,
     email,
     password: hashedPassword,
-    role: "Agent",
+    role,
   });
 
-  return agent;
+  return user;
 };

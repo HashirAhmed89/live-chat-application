@@ -1,5 +1,5 @@
-import { findOrCreateCustomer } from "../services/user.js";
-import { findOrCreateAgent } from "../services/user.js";
+import { findOrCreateCustomer, findOrCreateUser } from "../services/user.js";
+
 
 export const createCustomer = async (req, res) => {
   try {
@@ -23,14 +23,15 @@ export const createCustomer = async (req, res) => {
 };
 
 
-export const createAgent = async (req, res) => {
+export const createUser = async (req, res) => {
   try {
-    const { visitorId, name, email, password, confirmPassword } = req.body;
+    const { visitorId, name, email,role, password, confirmPassword } = req.body;
 
-    const agent = await findOrCreateAgent({
+    const agent = await findOrCreateUser({
       visitorId,
       name,
       email,
+      role,
       password,
       confirmPassword,
     });
@@ -38,7 +39,7 @@ export const createAgent = async (req, res) => {
     return res.status(201).json({
       success: true,
       agent,
-      message: "Agent Created",
+      message: "Created",
     });
 
   } catch (error) {

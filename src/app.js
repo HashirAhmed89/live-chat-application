@@ -22,8 +22,8 @@ app.use("/api/messages", messageRoutes);
 // login API
 app.use("/api/auth", authRoutes);
 
-// agent API
-app.use("/api/agent",userRoutes);
+// user API
+app.use("/api/user",userRoutes);
 
 // get conversations
 
@@ -32,5 +32,9 @@ app.use("/api/conversations",conversationRoutes);
 // get conversation by ID 
 
 app.use("/api/:conversation",conversationRoutes);
+
+// assignAgentId
+
+app.use("/api/assignAgentId",conversationRoutes)
 
 export default app;

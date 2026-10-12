@@ -2,10 +2,11 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 
+
 export const authAttempt = async ({ email, password }) => {
   const user = await User.findOne({
     email,
-    role: "Agent",
+    role: { $in: ["Agent", "Admin"] },
   });
 
   if (!user) {
@@ -20,13 +21,13 @@ export const authAttempt = async ({ email, password }) => {
 
   const token = jwt.sign(
     {
-      userId: user._id,
+      userId: user._id.toString(),
       role: user.role,
     },
     process.env.JWT_SECRET_KEY,
     {
-      expiresIn: "1m",
-    },
+      expiresIn: "7d",
+    }
   );
 
   return {
