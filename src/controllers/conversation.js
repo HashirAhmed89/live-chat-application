@@ -1,27 +1,30 @@
+import mongoose from "mongoose";
 import { getAllConversation } from "../services/conversation.js";
 import { getConversationById } from "../services/conversation.js";
 import { assignAgentIds } from "../services/conversation.js";
 
 export const allConversations = async (req, res) => {
-  const { userId, role } = req.user;
+  const { userId, role , name , email , assignedAgentId  } = req.user;
 
   const conversation = await getAllConversation({
     userId,
     role,
+    name,
+    email
+
   });
 
   return res.status(200).json({
     conversation,
     sucess: true,
     message: "sucessfull",
+    
   });
 };
 
 export const getConversation = async (req, res) => {
   const { userId, role } = req.user;
   const { conversationId } = req.params;
-
-  console.log(userId, role, conversationId);
 
   const conversation = await getConversationById({
     userId,
@@ -35,10 +38,19 @@ export const getConversation = async (req, res) => {
 };
 
 export const assign = async (req, res) => {
-  
-  
-    const { conversationId, assignAgentId } = req.body;
+  const { conversationId, assignAgentId } = req.body || {};
 
+  if (
+    !mongoose.isValidObjectId(conversationId) ||
+    !mongoose.isValidObjectId(assignAgentId)
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Valid conversationId and assignAgentId are required",
+    });
+  }
+
+  try {
     const sendAssignAgentId = await assignAgentIds({
       conversationId,
       assignAgentId,
@@ -46,7 +58,19 @@ export const assign = async (req, res) => {
 
     return res
       .status(200)
-      .json({ sendAssignAgentId , sucess: true, message: "sucessfull" });
-  
+      .json({
+        sendAssignAgentId,
+        success: true,
+        message: "Successfully assigned agent",
+      });
+  } catch (error) {
+    if (error.message === "Conversation not found") {
+      return res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+    }
 
+    throw error;
   }
+};

@@ -3,7 +3,9 @@ import messageRoutes from "./routes/message.js";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js"
 import conversationRoutes from "./routes/conversation.js"
+import deleteConversationRoutes from "./routes/deleteconversation.js";
 import cors from "cors"
+import { allowedOrigins } from "./config/env.js"
 
 
 const app = express();
@@ -36,5 +38,8 @@ app.use("/api/:conversation",conversationRoutes);
 // assignAgentId
 
 app.use("/api/assignAgentId",conversationRoutes)
+
+// delete conversation
+app.use("/api/deleteconversation", deleteConversationRoutes)
 
 export default app;

@@ -4,9 +4,11 @@ import { MONGO_URI } from "./env.js";
 const connectDB = async () => {
   try {
     await mongoose.connect(MONGO_URI);
-    console.log("MongoDB connected");
+
+    console.log(`MongoDB connected successfully to database "${mongoose.connection.name}"`);
   } catch (error) {
-    console.log("MongoDB connection error:", error.message);
+    console.error("MongoDB connection failed:", error.message);
+    process.exit(1);
   }
 };
 

@@ -4,8 +4,6 @@ export const login = async (req, res) => {
   
   try {
     const { email, password } = req.body;
-    
-    console.log(email,password)
 
     const { token, user } = await authAttempt({
       email,
@@ -21,9 +19,17 @@ export const login = async (req, res) => {
 
     });
   } catch (error) {
-    return res.status(401).json({
+    const invalidCredentials = error.message === "Invalid credentials";
+
+    if (!invalidCredentials) {
+      console.error("Login request failed:", error);
+    }
+
+    return res.status(invalidCredentials ? 401 : 503).json({
       success: false,
-      message: error.message || "Invalid credentials",
+      message: invalidCredentials
+        ? "Invalid credentials"
+        : "Login service temporarily unavailable",
     });
   }
 };

@@ -4,12 +4,14 @@ const conversationSchema = new mongoose.Schema(
   {
     customerId: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true
+      required: true,
+      ref:"User"
     },
 
     assignedAgentId: {
       type: mongoose.Schema.Types.ObjectId,
-      default: null
+      default: null,
+      ref:"User"
     },
 
     status: {

@@ -3,11 +3,17 @@ import { body } from "express-validator";
 // Message Validation
 export const messageValidation = [
   body("visitorId")
+    .isString()
+    .withMessage("visitorId must be a string")
+    .bail()
     .trim()
     .notEmpty()
     .withMessage("visitorId is required"),
 
   body("name")
+    .isString()
+    .withMessage("Name must be a string")
+    .bail()
     .trim()
     .notEmpty()
     .withMessage("Name is required")
@@ -15,25 +21,29 @@ export const messageValidation = [
     .withMessage("Name must be between 2 and 50 characters"),
 
   body("email")
+    .isString()
+    .withMessage("Email must be a string")
+    .bail()
     .trim()
     .notEmpty()
     .withMessage("Email is required")
     .isEmail()
     .withMessage("Please enter a valid email"),
 
-  body("subject")
-    .trim()
-    .notEmpty()
-    .withMessage("Subject is required")
-    .isLength({ max: 100 })
-    .withMessage("Subject cannot exceed 100 characters"),
+  body().custom((_, { req }) => {
+    const content = req.body.content ?? req.body.message;
 
-  body("content")
-    .trim()
-    .notEmpty()
-    .withMessage("Message content is required")
-    .isLength({ min: 1, max: 2000 })
-    .withMessage("Message must be between 1 and 2000 characters"),
+    if (typeof content !== "string" || !content.trim()) {
+      throw new Error("Message content is required as content or message");
+    }
+
+    if (content.trim().length > 2000) {
+      throw new Error("Message cannot exceed 2000 characters");
+    }
+
+    req.body.content = content.trim();
+    return true;
+  }),
 ];
 
 // Login Validation

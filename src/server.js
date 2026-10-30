@@ -1,34 +1,25 @@
-import connectDB from "./config/db.js";
-import { createServer } from "http";
+import http from "http";
 import app from "./app.js";
-import { Server } from "socket.io";
+import { initSocket } from "./sockets/index.js";
+import connectDB from "./config/db.js";
 
-connectDB();
+const server = http.createServer(app);
 
-const httpServer = createServer(app);
+initSocket(server);
 
-const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:5173",
-  },
-});
+const startServer = async () => {
+  try {
+    await connectDB();
 
-io.on("connection", (socket) => {
-  console.log("connected", socket.id);
+    const PORT = process.env.PORT || 3000;
 
-  socket.onAny((event, ...args) => {
-    console.log("EVENT RECEIVED:", event, args);
-  });
+    server.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Server startup failed:", error.message);
+    process.exit(1);
+  }
+};
 
-  // This is the join handler:
-  socket.on("join_conversation", (conversationId) => {
-    console.log(conversationId);
-    socket.join(`conversation_${conversationId}`);
-  });
-});
-
-app.set("io", io);
-
-httpServer.listen(3000, () => {
-  console.log("Server running");
-});
+startServer();
