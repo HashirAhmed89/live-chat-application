@@ -4,6 +4,8 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js"
 import conversationRoutes from "./routes/conversation.js"
 import deleteConversationRoutes from "./routes/deleteconversation.js";
+import ticketRoutes from "./routes/ticket.js"
+
 import cors from "cors"
 import { allowedOrigins } from "./config/env.js"
 
@@ -11,10 +13,11 @@ import { allowedOrigins } from "./config/env.js"
 const app = express();
 
 app.use(cors({
-    origin :"http://localhost:5173",
-    credentials:true
-
-}))
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "x-api-key"],
+}));
 
 app.use(express.json());
 
@@ -31,6 +34,12 @@ app.use("/api/user",userRoutes);
 
 app.use("/api/conversations",conversationRoutes);
 
+// get tickets
+app.use("/api/getTickets",ticketRoutes)
+
+// update status
+app.use("/api/updateTicketStatus",ticketRoutes)
+
 // get conversation by ID 
 
 app.use("/api/:conversation",conversationRoutes);
@@ -40,6 +49,8 @@ app.use("/api/:conversation",conversationRoutes);
 app.use("/api/assignAgentId",conversationRoutes)
 
 // delete conversation
-app.use("/api/deleteconversation", deleteConversationRoutes)
+app.use("/api/deleteconversation",deleteConversationRoutes)
+
+
 
 export default app;
