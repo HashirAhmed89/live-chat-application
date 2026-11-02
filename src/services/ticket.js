@@ -1,6 +1,10 @@
 import Ticket from "../models/ticket.js";
 
-export const findOrCreateTicket = async ({ customerId, conversationId, subject }) => {
+export const findOrCreateTicket = async ({
+  customerId,
+  conversationId,
+  subject,
+}) => {
   let ticket = await Ticket.findOne({ conversationId, customerId });
 
   if (!ticket) {
@@ -16,7 +20,9 @@ export const findOrCreateTicket = async ({ customerId, conversationId, subject }
 
 export const getTickets = async ({ userId, role }) => {
   let filter = {};
-  const normalizedRole = String(role || "").trim().toLowerCase();
+  const normalizedRole = String(role || "")
+    .trim()
+    .toLowerCase();
 
   if (normalizedRole === "customer") {
     filter.customerId = userId;
@@ -37,43 +43,74 @@ export const getTickets = async ({ userId, role }) => {
   return tickets;
 };
 
+export const getTicketById = async (id, userId, role) => {
+  const normalizedRole = String(role || "")
+    .trim()
+    .toLowerCase();
 
-  export const updateTicketStatus = async ({
-    ticketId,
-    status,
-    userId,
-    role,
-  }) => {
-    const allowedStatuses = ["open", "pending", "resolved", "closed"];
+  const ticket = await Ticket.findById(id)
+    .populate("customerId", "name email")
+    .populate("assignedAgentId", "name email")
+    .populate("conversationId");
 
-    if (!allowedStatuses.includes(status)) {
-      const error = new Error("Invalid ticket status");
-      error.statusCode = 400;
-      throw error;
-    }
+  if (!ticket) {
+    const error = new Error("Ticket not found");
+    error.statusCode = 404;
+    throw error;
+  }
 
-    const ticket = await Ticket.findById(ticketId);
+  const allowed =
+    normalizedRole === "admin" ||
+    (normalizedRole === "customer" &&
+      ticket.customerId?._id?.toString() === String(userId)) ||
+    (normalizedRole === "agent" &&
+      ticket.assignedAgentId?._id?.toString() === String(userId));
 
-    if (!ticket) {
-      const error = new Error("Ticket not found");
-      error.statusCode = 404;
-      throw error;
-    }
+  if (!allowed) {
+    const error = new Error("Access denied");
+    error.statusCode = 403;
+    throw error;
+  }
 
-    // Only admin and assigned agent can update status
-    if (
-      role !== "admin" &&
-      (role !== "agent" ||
-        ticket.assignedAgentId?.toString() !== userId.toString())
-    ) {
-      const error = new Error("You are not authorized to update this ticket");
-      error.statusCode = 403;
-      throw error;
-    }
+  return ticket;
+};
 
-    ticket.status = status;
+export const updateTicketStatus = async ({
+  ticketId,
+  status,
+  userId,
+  role,
+}) => {
+  const allowedStatuses = ["open", "pending", "resolved", "closed"];
 
-    await ticket.save();
+  if (!allowedStatuses.includes(status)) {
+    const error = new Error("Invalid ticket status");
+    error.statusCode = 400;
+    throw error;
+  }
 
-    return ticket;
-  };
+  const ticket = await Ticket.findById(ticketId);
+
+  if (!ticket) {
+    const error = new Error("Ticket not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Only admin and assigned agent can update status
+  if (
+    role !== "admin" &&
+    (role !== "agent" ||
+      ticket.assignedAgentId?.toString() !== userId.toString())
+  ) {
+    const error = new Error("You are not authorized to update this ticket");
+    error.statusCode = 403;
+    throw error;
+  }
+
+  ticket.status = status;
+
+  await ticket.save();
+
+  return ticket;
+};

@@ -1,4 +1,6 @@
+import mongoose from "mongoose";
 import {
+  getTicketById as fetchTicketById,
   getTickets as fetchTickets,
   updateTicketStatus as updateTicketStatusService,
 } from "../services/ticket.js";
@@ -18,7 +20,6 @@ export const getTickets = async (req, res) => {
       total: tickets.length,
       data: tickets,
     });
-
   } catch (error) {
     return res.status(error.statusCode || 500).json({
       success: false,
@@ -27,8 +28,33 @@ export const getTickets = async (req, res) => {
   }
 };
 
+export const getTicketById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId, role } = req.user;
 
- export const updateTicketStatus = async (req, res) => {
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ticket ID",
+      });
+    }
+
+    const ticket = await fetchTicketById(id, userId, role);
+
+    return res.status(200).json({
+      success: true,
+      data: ticket,
+    });
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const updateTicketStatus = async (req, res) => {
   try {
     const { userId, role } = req.user;
     const { id } = req.params;

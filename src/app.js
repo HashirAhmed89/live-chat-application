@@ -37,6 +37,9 @@ app.use("/api/conversations",conversationRoutes);
 // get tickets
 app.use("/api/getTickets",ticketRoutes)
 
+// get ticket by id 
+app.use("/api/getTicketById",ticketRoutes)
+
 // update status
 app.use("/api/updateTicketStatus",ticketRoutes)
 
