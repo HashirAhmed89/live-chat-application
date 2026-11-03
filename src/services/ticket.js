@@ -82,6 +82,9 @@ export const updateTicketStatus = async ({
   role,
 }) => {
   const allowedStatuses = ["open", "pending", "resolved", "closed"];
+  const normalizedRole = String(role || "")
+    .trim()
+    .toLowerCase();
 
   if (!allowedStatuses.includes(status)) {
     const error = new Error("Invalid ticket status");
@@ -99,8 +102,8 @@ export const updateTicketStatus = async ({
 
   // Only admin and assigned agent can update status
   if (
-    role !== "admin" &&
-    (role !== "agent" ||
+    normalizedRole !== "admin" &&
+    (normalizedRole !== "agent" ||
       ticket.assignedAgentId?.toString() !== userId.toString())
   ) {
     const error = new Error("You are not authorized to update this ticket");

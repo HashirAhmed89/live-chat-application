@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 import {
   getTicketById as fetchTicketById,
   getTickets as fetchTickets,
-  updateTicketStatus as updateTicketStatusService,
+  updateTicketStatus as fetchUpdateTicketStatus,
 } from "../services/ticket.js";
+
 
 export const getTickets = async (req, res) => {
   try {
@@ -60,7 +61,7 @@ export const updateTicketStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    const ticket = await updateTicketStatusService({
+    const ticket = await fetchUpdateTicketStatus({
       ticketId: id,
       status,
       userId,

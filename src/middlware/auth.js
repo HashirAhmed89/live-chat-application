@@ -13,7 +13,19 @@ export const verifyToken = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-    console.log("Decoded JWT:", decoded);
+    if (
+      typeof decoded !== "object" ||
+      decoded === null ||
+      typeof decoded.userId !== "string" ||
+      !decoded.userId ||
+      typeof decoded.role !== "string" ||
+      !decoded.role
+    ) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token payload",
+      });
+    }
 
     req.user = {
       userId: decoded.userId,
@@ -21,13 +33,11 @@ export const verifyToken = (req, res, next) => {
       conversationId: decoded.conversationId,
     };
 
-    console.log("Authenticated User:", req.user);
-
     return next();
   } catch (error) {
     return res.status(401).json({
       success: false,
-      message: error.message,
+      message: "Invalid or expired token",
     });
   }
 };

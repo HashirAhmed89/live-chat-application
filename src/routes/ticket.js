@@ -8,6 +8,6 @@ router.get("/", verifyToken, getTickets)
 
 router.get("/:id", verifyToken, getTicketById);
 
-router.patch("/:id", updateTicketStatus)
+router.patch("/:id", verifyToken, updateTicketStatus)
 
 export default router
