@@ -117,3 +117,45 @@ export const updateTicketStatus = async ({
 
   return ticket;
 };
+
+export const updateTicketPriority = async ({
+  ticketId,
+  priority,
+  userId,
+  role,
+}) => {
+  const normalizedRole = String(role || "")
+    .trim()
+    .toLowerCase();
+  const fail = (message, statusCode) => {
+    const error = new Error(message);
+    error.statusCode = statusCode;
+    return error;
+  };
+
+  const validPriorities = ["low", "medium", "high", "urgent"];
+
+  if (!validPriorities.includes(priority)) {
+    throw fail("Invalid ticket priority", 400);
+  }
+
+  const ticket = await Ticket.findById(ticketId);
+
+  if (!ticket) {
+    throw fail("Ticket not found", 404);
+  }
+
+  const isAllowed =
+    normalizedRole === "admin" ||
+    (normalizedRole === "agent" &&
+      String(ticket.assignedAgentId) === String(userId));
+
+  if (!isAllowed) {
+    throw fail("You are not authorized to update this ticket", 403);
+  }
+
+  ticket.priority = priority;
+  await ticket.save();
+
+  return ticket;
+};

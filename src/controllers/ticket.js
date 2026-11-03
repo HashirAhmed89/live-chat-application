@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 import {
   getTicketById as fetchTicketById,
   getTickets as fetchTickets,
+  updateTicketPriority as fetchUpdateTicketPriority,
   updateTicketStatus as fetchUpdateTicketStatus,
 } from "../services/ticket.js";
-
 
 export const getTickets = async (req, res) => {
   try {
@@ -77,6 +77,39 @@ export const updateTicketStatus = async (req, res) => {
     return res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || "Internal server error",
+    });
+  }
+};
+
+export const updateTicketPriority = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { priority } = req.body;
+    const { userId, role } = req.user;
+
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ticket ID",
+      });
+    }
+
+    const ticket = await fetchUpdateTicketPriority({
+      ticketId: id,
+      priority,
+      userId,
+      role,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Ticket priority updated successfully",
+      data: ticket,
+    });
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
     });
   }
 };

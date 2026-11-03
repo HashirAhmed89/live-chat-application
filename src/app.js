@@ -4,7 +4,7 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js"
 import conversationRoutes from "./routes/conversation.js"
 import deleteConversationRoutes from "./routes/deleteconversation.js";
-import ticketRoutes from "./routes/ticket.js"
+import ticketRoutes, { priorityRouter as ticketPriorityRoutes } from "./routes/ticket.js"
 
 import cors from "cors"
 import { allowedOrigins } from "./config/env.js"
@@ -42,6 +42,8 @@ app.use("/api/getTicketById",ticketRoutes)
 
 // update status
 app.use("/api/updateTicketStatus",ticketRoutes)
+
+app.use("/api/updateTicketPriority", ticketPriorityRoutes)
 
 // get conversation by ID 
 
