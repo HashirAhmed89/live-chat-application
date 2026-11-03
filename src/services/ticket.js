@@ -1,4 +1,5 @@
 import Ticket from "../models/ticket.js";
+import User from "../models/user.js";
 
 export const findOrCreateTicket = async ({
   customerId,
@@ -155,6 +156,65 @@ export const updateTicketPriority = async ({
   }
 
   ticket.priority = priority;
+  await ticket.save();
+
+  return ticket;
+};
+
+
+export const assignTicket = async ({
+  ticketId,
+  agentId,
+  userId,
+  role,
+}) => {
+  const normalizedRole = String(role || "")
+    .trim()
+    .toLowerCase();
+  const fail = (message, statusCode) => {
+    const error = new Error(message);
+    error.statusCode = statusCode;
+    return error;
+  };
+
+  // Only admin can assign tickets
+  if (normalizedRole !== "admin") {
+    throw fail("Only admin can assign tickets", 403);
+  }
+
+  const assigningUser = await User.findById(userId);
+
+  if (
+    !assigningUser ||
+    String(assigningUser.role || "")
+      .trim()
+      .toLowerCase() !== "admin"
+  ) {
+    throw fail("Only admin can assign tickets", 403);
+  }
+
+  // Find the ticket
+  const ticket = await Ticket.findById(ticketId);
+
+  if (!ticket) {
+    throw fail("Ticket not found", 404);
+  }
+
+  // Find the agent
+  const agent = await User.findById(agentId);
+
+  if (
+    !agent ||
+    String(agent.role || "")
+      .trim()
+      .toLowerCase() !== "agent"
+  ) {
+    throw fail("Invalid agent", 400);
+  }
+
+  // Assign agent to ticket
+  ticket.assignedAgentId = agentId;
+
   await ticket.save();
 
   return ticket;
