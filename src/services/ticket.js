@@ -219,3 +219,23 @@ export const assignTicket = async ({
 
   return ticket;
 };
+
+export const deleteTicket = async ({ ticketId, role }) => {
+  if (String(role).toLowerCase() !== "admin") {
+    const error = new Error("Only admin can delete tickets");
+    error.statusCode = 403;
+    throw error;
+  }
+
+  const ticket = await Ticket.findById(ticketId);
+
+  if (!ticket) {
+    const error = new Error("Ticket not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  await Ticket.findByIdAndDelete(ticketId);
+
+  return ticket;
+};

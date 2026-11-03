@@ -4,7 +4,8 @@ import {
   getTickets,
   updateTicketStatus,
   updateTicketPriority,
-  assignTicket
+  assignTicket,
+  deleteTicket
 } from "../controllers/ticket.js";
 import { verifyToken } from "../middlware/auth.js";
 
@@ -21,5 +22,7 @@ router.patch("/:id", verifyToken, updateTicketStatus);
 priorityRouter.patch("/:id", verifyToken, updateTicketPriority);
 
 assignmentRouter.patch("/:id", verifyToken ,assignTicket);
+
+router.delete("/:id", verifyToken, deleteTicket);
 
 export default router;

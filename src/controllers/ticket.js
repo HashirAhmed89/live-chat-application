@@ -5,6 +5,7 @@ import {
   assignTicket as fetchAssignTicket,
   updateTicketPriority as fetchUpdateTicketPriority,
   updateTicketStatus as fetchUpdateTicketStatus,
+  deleteTicket as fetchDeleteTicket
 } from "../services/ticket.js";
 
 export const getTickets = async (req, res) => {
@@ -140,6 +141,38 @@ export const assignTicket = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Ticket assigned successfully",
+      data: ticket,
+    });
+
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+export const deleteTicket = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.user;
+
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ticket ID",
+      });
+    }
+
+    const ticket = await fetchDeleteTicket({
+      ticketId: id,
+      role,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Ticket deleted successfully",
       data: ticket,
     });
 

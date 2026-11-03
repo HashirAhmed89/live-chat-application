@@ -50,6 +50,8 @@ app.use("/api/updateTicketPriority", ticketPriorityRoutes)
 
 app.use("/api/assignTicket", ticketAssignmentRoutes)
 
+app.use("/api/getTickets", ticketRoutes);
+
 // get conversation by ID 
 
 app.use("/api/:conversation",conversationRoutes);
