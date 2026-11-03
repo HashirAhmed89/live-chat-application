@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+// Verify the x-api-key JWT and attach its user claims to the request.
 export const verifyToken = (req, res, next) => {
   try {
     const token = req.headers["x-api-key"];

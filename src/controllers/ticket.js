@@ -8,6 +8,7 @@ import {
   deleteTicket as fetchDeleteTicket
 } from "../services/ticket.js";
 
+// Return tickets visible to the authenticated user's role.
 export const getTickets = async (req, res) => {
   try {
     const { userId, role } = req.user;
@@ -31,6 +32,7 @@ export const getTickets = async (req, res) => {
   }
 };
 
+// Validate the ticket ID and return the ticket if the user may view it.
 export const getTicketById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -57,6 +59,7 @@ export const getTicketById = async (req, res) => {
   }
 };
 
+// Update a ticket's status using the authenticated user's permissions.
 export const updateTicketStatus = async (req, res) => {
   try {
     const { userId, role } = req.user;
@@ -83,6 +86,7 @@ export const updateTicketStatus = async (req, res) => {
   }
 };
 
+// Update a ticket's priority using the authenticated user's permissions.
 export const updateTicketPriority = async (req, res) => {
   try {
     const { id } = req.params;
@@ -117,6 +121,7 @@ export const updateTicketPriority = async (req, res) => {
 };
 
 
+// Validate the ticket and agent IDs, then assign the ticket.
 export const assignTicket = async (req, res) => {
   try {
     const { id } = req.params;
@@ -153,6 +158,7 @@ export const assignTicket = async (req, res) => {
 };
 
 
+// Validate the ticket ID and delete the ticket if permitted.
 export const deleteTicket = async (req, res) => {
   try {
     const { id } = req.params;

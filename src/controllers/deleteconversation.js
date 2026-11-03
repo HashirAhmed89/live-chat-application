@@ -1,5 +1,6 @@
 import { deleteconversation } from "../services/deleteconversation.js";
 
+// Check the user's role and delete the requested conversation.
 export const deleteConversation = async (req, res) => {
   console.log(req)
   try {

@@ -7,6 +7,7 @@ import { findOrCreateTicket } from "./ticket.js";
 import { findOrCreateCustomer } from "./user.js";
 
 // 1. Customer ka message send karna
+// Create or find the customer, conversation, ticket, and initial message.
 export const send = async ({ visitorId, name, email, subject, content }) => {
 
   // Customer find karo ya new customer create karo
@@ -63,6 +64,7 @@ export const send = async ({ visitorId, name, email, subject, content }) => {
 
 
 // 2. Message ko database mein save karna
+// Create a message record and return it to the caller.
 export const createMessage = async ({
   conversationId,
   senderId,
@@ -84,6 +86,7 @@ export const createMessage = async ({
 
 
 // 3. Conversation ke saare messages get karna
+// Check access and return a conversation's messages in time order.
 export const getConversationMessages = async ({
   conversationId,
   userId,
@@ -142,6 +145,7 @@ export const getConversationMessages = async ({
 
 
 // 4. Agent, admin ya customer ka reply send karna
+// Verify the sender's access, save their reply, and return the updated data.
 export const sendAgentReply = async ({
   conversationId,
   userId,

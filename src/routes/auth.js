@@ -5,6 +5,7 @@ import { loginValidation } from "../middlware/validation.js";
 
 const router = express.Router();
 
+// Return the first login validation error before calling the controller.
 const validateLogin = (req, res, next) => {
   const errors = validationResult(req);
 

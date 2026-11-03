@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.js";
 
+// Find a customer by visitor ID or email, or create one if missing.
 export const findOrCreateCustomer = async ({ visitorId, name, email }) => {
   const normalizedEmail = email.trim().toLowerCase();
   const customerRole = { $regex: /^customer$/i };
@@ -32,6 +33,7 @@ export const findOrCreateCustomer = async ({ visitorId, name, email }) => {
   return customer;
 };
 
+// Create a user account after checking for a duplicate email.
 export const findOrCreateUser = async ({ visitorId, name, email, password, role }) => {
   const existingUser = await User.findOne({ email });
 

@@ -4,6 +4,7 @@ import Message from "../models/message.js";
 import { getIO } from "../sockets/index.js";
 
 // 1. Find an existing conversation or create a new one
+// Return the customer's existing conversation or create one.
 export const findOrCreateConversation = async ({
   customerId,
   assignAgentId,
@@ -33,6 +34,7 @@ export const findOrCreateConversation = async ({
 
 
 // 2. Get all conversations for the logged-in user
+// List conversations visible to the user's role with their latest messages.
 export const getAllConversation = async ({ userId, role }) => {
 
   // Convert role to lowercase to avoid uppercase/lowercase issues
@@ -65,6 +67,7 @@ export const getAllConversation = async ({ userId, role }) => {
 
   // Get all conversation IDs
   const conversationIds = conversations.map(
+    // Collect each conversation's database ID for message lookup.
     (conversation) => conversation._id
   );
 
@@ -96,6 +99,7 @@ export const getAllConversation = async ({ userId, role }) => {
   // Also get the sender's name, email and role
   const latestMessages = await Message.find({
     _id: {
+      // Collect the latest message IDs for the database query.
       $in: latestMessageRows.map((row) => row.messageId),
     },
   })
@@ -104,6 +108,7 @@ export const getAllConversation = async ({ userId, role }) => {
 
   // Create a map to find a message using its conversation ID
   const latestMessageByConversationId = new Map(
+    // Index each message by its conversation ID.
     latestMessages.map((message) => [
       String(message.conversationId),
       message,
@@ -112,6 +117,7 @@ export const getAllConversation = async ({ userId, role }) => {
 
   // Add the latest message and its time to each conversation
   const conversationsWithLastMessage = conversations.map(
+    // Attach the latest message and activity time to one conversation.
     (conversation) => {
 
       // Find the latest message for this conversation
@@ -137,6 +143,7 @@ export const getAllConversation = async ({ userId, role }) => {
   );
 
   // Show the most recently active conversations first
+  // Compare activity times to sort conversations from newest to oldest.
   conversationsWithLastMessage.sort((a, b) => {
     const timeA = new Date(
       a.lastMessageAt || a.createdAt
@@ -155,6 +162,7 @@ export const getAllConversation = async ({ userId, role }) => {
 
 
 // 3. Get one conversation using its ID
+// Return a conversation only when the user is allowed to access it.
 export const getConversationById = async ({
   conversationId,
   role,
@@ -207,6 +215,7 @@ export const getConversationById = async ({
 
 
 // 4. Assign a conversation to an agent
+// Save the agent assignment and notify both agents through Socket.IO.
 export const assignAgentIds = async ({
   conversationId,
   assignAgentId,

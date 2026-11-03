@@ -1,6 +1,7 @@
 import { findOrCreateCustomer, findOrCreateUser } from "../services/user.js";
 
 
+// Create or retrieve the customer described by the request.
 export const createCustomer = async (req, res) => {
   try {
     const { visitorId, name, email, password, role } = req.body;
@@ -23,6 +24,7 @@ export const createCustomer = async (req, res) => {
 };
 
 
+// Create a user account using the submitted details.
 export const createUser = async (req, res) => {
   try {
     const { visitorId, name, email,role, password, confirmPassword } = req.body;

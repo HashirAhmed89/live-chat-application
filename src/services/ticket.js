@@ -1,6 +1,7 @@
 import Ticket from "../models/ticket.js";
 import User from "../models/user.js";
 
+// Find a ticket for the conversation and customer, or create one.
 export const findOrCreateTicket = async ({
   customerId,
   conversationId,
@@ -19,6 +20,7 @@ export const findOrCreateTicket = async ({
   return ticket;
 };
 
+// Return tickets filtered according to the user's role.
 export const getTickets = async ({ userId, role }) => {
   let filter = {};
   const normalizedRole = String(role || "")
@@ -44,6 +46,7 @@ export const getTickets = async ({ userId, role }) => {
   return tickets;
 };
 
+// Find a ticket and return it only if the user may view it.
 export const getTicketById = async (id, userId, role) => {
   const normalizedRole = String(role || "")
     .trim()
@@ -76,6 +79,7 @@ export const getTicketById = async (id, userId, role) => {
   return ticket;
 };
 
+// Validate permissions and save a ticket status change.
 export const updateTicketStatus = async ({
   ticketId,
   status,
@@ -119,6 +123,7 @@ export const updateTicketStatus = async ({
   return ticket;
 };
 
+// Validate permissions and save a ticket priority change.
 export const updateTicketPriority = async ({
   ticketId,
   priority,
@@ -128,6 +133,7 @@ export const updateTicketPriority = async ({
   const normalizedRole = String(role || "")
     .trim()
     .toLowerCase();
+  // Create a service error with the HTTP status used by the controller.
   const fail = (message, statusCode) => {
     const error = new Error(message);
     error.statusCode = statusCode;
@@ -162,6 +168,7 @@ export const updateTicketPriority = async ({
 };
 
 
+// Assign an existing ticket to an existing agent for an admin.
 export const assignTicket = async ({
   ticketId,
   agentId,
@@ -171,6 +178,7 @@ export const assignTicket = async ({
   const normalizedRole = String(role || "")
     .trim()
     .toLowerCase();
+  // Create a service error with the HTTP status used by the controller.
   const fail = (message, statusCode) => {
     const error = new Error(message);
     error.statusCode = statusCode;
@@ -220,6 +228,7 @@ export const assignTicket = async ({
   return ticket;
 };
 
+// Delete a ticket when the requester has the admin role.
 export const deleteTicket = async ({ ticketId, role }) => {
   if (String(role).toLowerCase() !== "admin") {
     const error = new Error("Only admin can delete tickets");

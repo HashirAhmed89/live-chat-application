@@ -1,5 +1,6 @@
 import { authAttempt } from "../services/auth.js";
 
+// Authenticate the submitted credentials and return the user token.
 export const login = async (req, res) => {
   
   try {

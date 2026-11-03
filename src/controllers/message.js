@@ -13,6 +13,7 @@ import Conversation from "../models/conversation.js";
 
 
 // 1. Customer ka message receive aur send karna
+// Validate a customer's request, save the message, and notify connected users.
 export const sendMessage = async (req, res) => {
   try {
     // Check karo ke request mein koi validation error to nahi
@@ -203,6 +204,7 @@ export const sendMessage = async (req, res) => {
 
 
 // 2. Conversation ke messages get karna
+// Return messages for a conversation the authenticated user may access.
 export const getMessages = async (req, res) => {
 
   // URL query se conversation ID lo
@@ -242,6 +244,7 @@ export const getMessages = async (req, res) => {
 
 
 // 3. Agent, admin ya customer ka reply send karna
+// Validate and send a reply from an authenticated conversation participant.
 export const sendAgentMessage = async (req, res) => {
 
   // User ka role lowercase mein lo

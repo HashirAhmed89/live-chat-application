@@ -1,6 +1,7 @@
 import Conversation from "../models/conversation.js";
 import Message from "../models/message.js";
 
+// Delete a conversation and its messages after checking the user's access.
 export const deleteconversation = async ({
   conversationId,
   userId,

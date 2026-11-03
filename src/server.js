@@ -7,12 +7,14 @@ const server = http.createServer(app);
 
 initSocket(server);
 
+// Connect to MongoDB, then start the HTTP server.
 const startServer = async () => {
   try {
     await connectDB();
 
     const PORT = process.env.PORT || 3000;
 
+    // Log the port after the server starts listening.
     server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });

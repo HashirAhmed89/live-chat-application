@@ -3,6 +3,7 @@ import { getAllConversation } from "../services/conversation.js";
 import { getConversationById } from "../services/conversation.js";
 import { assignAgentIds } from "../services/conversation.js";
 
+// Return conversations visible to the authenticated user.
 export const allConversations = async (req, res) => {
   const { userId, role , name , email , assignedAgentId  } = req.user;
 
@@ -22,6 +23,7 @@ export const allConversations = async (req, res) => {
   });
 };
 
+// Return one conversation after the service checks access.
 export const getConversation = async (req, res) => {
   const { userId, role } = req.user;
   const { conversationId } = req.params;
@@ -37,6 +39,7 @@ export const getConversation = async (req, res) => {
     .json({ conversation, sucess: true, message: "sucessfull" });
 };
 
+// Validate the conversation and agent IDs, then assign the agent.
 export const assign = async (req, res) => {
   const { conversationId, assignAgentId } = req.body || {};
 

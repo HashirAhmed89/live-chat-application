@@ -6,6 +6,7 @@ import { allowedOrigins } from "../config/env.js";
 let io;
 
 
+// Create the Socket.IO server and register authentication and room handlers.
 export const initSocket = (httpServer) => {
   io = new Server(httpServer, {
     cors: {
@@ -15,6 +16,7 @@ export const initSocket = (httpServer) => {
   });
 
   // Authenticate the connection
+  // Verify the socket token and attach the matching user to the connection.
   io.use(async (socket, next) => {
     const token =
       socket.handshake.auth?.token ??
@@ -74,6 +76,7 @@ export const initSocket = (httpServer) => {
   });
 
   // Join the appropriate room
+  // Place each connected user in the rooms allowed by their role.
   io.on("connection", (socket) => {
     const user = socket.user;
     const role = String(user.role || "").trim().toLowerCase();
@@ -89,4 +92,5 @@ export const initSocket = (httpServer) => {
   });
 };
 
+// Return the active Socket.IO server instance.
 export const getIO = () => io;

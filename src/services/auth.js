@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 
+// Check agent or admin credentials and return a signed JWT.
 export const authAttempt = async ({ email, password }) => {
   const user = await User.findOne({
     email: email.trim().toLowerCase(),

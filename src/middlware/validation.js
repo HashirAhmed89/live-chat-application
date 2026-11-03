@@ -30,6 +30,7 @@ export const messageValidation = [
     .isEmail()
     .withMessage("Please enter a valid email"),
 
+  // Validate either message field and store the trimmed content.
   body().custom((_, { req }) => {
     const content = req.body.content ?? req.body.message;
 
@@ -102,6 +103,7 @@ export const agentValidation = [
   body("confirmPassword")
     .notEmpty()
     .withMessage("Confirm password is required")
+    // Check that the confirmation matches the submitted password.
     .custom((confirmPassword, { req }) => {
       if (confirmPassword !== req.body.password) {
         throw new Error("Passwords do not match please check");
