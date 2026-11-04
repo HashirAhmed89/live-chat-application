@@ -1,6 +1,7 @@
 import express from "express";
 import messageRoutes from "./routes/message.js";
 import authRoutes from "./routes/auth.js";
+import agentRoutes from "./routes/agent.js";
 import userRoutes from "./routes/user.js"
 import conversationRoutes from "./routes/conversation.js"
 import deleteConversationRoutes from "./routes/deleteconversation.js";
@@ -32,6 +33,9 @@ app.use("/api/auth", authRoutes);
 
 // user API
 app.use("/api/user",userRoutes);
+
+// Retrieve agents for authorized admins.
+app.use("/api/getAllAgents", agentRoutes);
 
 // get conversations
 
