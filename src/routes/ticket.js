@@ -21,7 +21,7 @@ router.patch("/:id", verifyToken, updateTicketStatus);
 
 priorityRouter.patch("/:id", verifyToken, updateTicketPriority);
 
-assignmentRouter.patch("/:id", verifyToken ,assignTicket);
+assignmentRouter.post("/:id", verifyToken ,assignTicket);
 
 router.delete("/:id", verifyToken, deleteTicket);
 
