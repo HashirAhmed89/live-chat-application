@@ -47,6 +47,39 @@ export const messageValidation = [
   }),
 ];
 
+// Validate the customer details submitted by the chat widget.
+export const widgetStartValidation = [
+  body("name")
+    .isString()
+    .withMessage("Name must be a string")
+    .bail()
+    .trim()
+    .notEmpty()
+    .withMessage("Name is required")
+    .isLength({ min: 2, max: 50 })
+    .withMessage("Name must be between 2 and 50 characters"),
+
+  body("email")
+    .isString()
+    .withMessage("Email must be a string")
+    .bail()
+    .trim()
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Please enter a valid email"),
+
+  body("phone")
+    .isString()
+    .withMessage("Phone must be a string")
+    .bail()
+    .trim()
+    .notEmpty()
+    .withMessage("Phone is required")
+    .isLength({ min: 5, max: 30 })
+    .withMessage("Phone must be between 5 and 30 characters"),
+];
+
 // Login Validation
 export const loginValidation = [
   body("email")

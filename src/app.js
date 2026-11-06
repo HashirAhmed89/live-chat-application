@@ -5,6 +5,7 @@ import agentRoutes from "./routes/agent.js";
 import userRoutes from "./routes/user.js"
 import conversationRoutes from "./routes/conversation.js"
 import deleteConversationRoutes from "./routes/deleteconversation.js";
+import widgetRoutes from "./routes/widget.js";
 import ticketRoutes, {
   assignmentRouter as ticketAssignmentRoutes,
   priorityRouter as ticketPriorityRoutes,
@@ -27,6 +28,9 @@ app.use(express.json());
 
 // send message API
 app.use("/api/messages", messageRoutes);
+
+// Start customer chat widget sessions.
+app.use("/api/widget", widgetRoutes);
 
 // login API
 app.use("/api/auth", authRoutes);

@@ -2,8 +2,8 @@ import bcrypt from "bcryptjs";
 import User from "../models/user.js";
 
 // Find a customer by visitor ID or email, or create one if missing.
-export const findOrCreateCustomer = async ({ visitorId, name, email }) => {
-  const normalizedEmail = email.trim().toLowerCase();
+export const findOrCreateCustomer = async ({ visitorId, name, email, phone }) => {
+  const normalizedEmail = String(email).trim().toLowerCase();
   const customerRole = { $regex: /^customer$/i };
   // Match customer roles case-insensitively so older records are reused.
   let customer = await User.findOne({ visitorId, role: customerRole });
@@ -16,18 +16,36 @@ export const findOrCreateCustomer = async ({ visitorId, name, email }) => {
   }
 
   if (!customer) {
-    const hashedPassword = await bcrypt.hash("password", 10);
+    try {
+      customer = await User.create({
+        visitorId,
+        name,
+        email: normalizedEmail,
+        phone,
+        role: "Customer",
+      });
+      console.log(`Customer saved: ${customer._id}`);
+    } catch (error) {
+      if (error.code !== 11000) {
+        throw error;
+      }
 
-    customer = await User.create({
-      visitorId,
-      name,
-      email: normalizedEmail,
-      password: hashedPassword,
-      role: "Customer",
-    });
-    console.log(`Customer saved: ${customer._id}`);
+      customer = await User.findOne({
+        email: normalizedEmail,
+        role: customerRole,
+      });
+
+      if (!customer) {
+        throw error;
+      }
+    }
   } else {
     console.log(`Customer found: ${customer._id}`);
+  }
+
+  if (phone && customer.phone !== phone) {
+    customer.phone = phone;
+    await customer.save();
   }
 
   return customer;

@@ -30,6 +30,8 @@ const conversationSchema = new mongoose.Schema(
   }
 )
 
+conversationSchema.index({ customerId: 1 }, { unique: true });
+
 
 const Conversation = mongoose.model(
   "Conversation",

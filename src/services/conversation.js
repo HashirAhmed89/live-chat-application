@@ -17,10 +17,22 @@ export const findOrCreateConversation = async ({
 
   // If conversation does not exist, create a new one
   if (!conversation) {
-    conversation = await Conversation.create({
-      customerId: customerId,
-      assignedAgentId: assignAgentId,
-    });
+    try {
+      conversation = await Conversation.create({
+        customerId: customerId,
+        assignedAgentId: assignAgentId,
+      });
+    } catch (error) {
+      if (error.code !== 11000) {
+        throw error;
+      }
+
+      conversation = await Conversation.findOne({ customerId });
+
+      if (!conversation) {
+        throw error;
+      }
+    }
 
     console.log(`Conversation saved: ${conversation._id}`);
   } else {

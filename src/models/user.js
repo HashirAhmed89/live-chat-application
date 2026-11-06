@@ -19,13 +19,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      lowercase: true
+      lowercase: true,
+      unique: true,
     },
 
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return this.role === "Agent" || this.role === "Admin";
+      },
       minlength: 6
+    },
+
+    phone: {
+      type: String,
+      trim: true,
     },
 
     role: {
