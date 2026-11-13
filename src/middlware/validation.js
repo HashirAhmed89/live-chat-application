@@ -49,6 +49,14 @@ export const messageValidation = [
 
 // Validate the customer details submitted by the chat widget.
 export const widgetStartValidation = [
+  body("visitorId")
+    .isString()
+    .withMessage("visitorId must be a string")
+    .bail()
+    .trim()
+    .notEmpty()
+    .withMessage("visitorId is required"),
+
   body("name")
     .isString()
     .withMessage("Name must be a string")

@@ -30,15 +30,10 @@ export const sendMessage = async (req, res) => {
     // Request se customer aur message ki details lo
     const { visitorId, name, email, subject } = req.body;
 
-    // Email ko clean karo
-    const normalizedEmail = String(email || "")
-      .trim()
-      .toLowerCase();
-
     // Check karo ke customer pehle se database mein hai ya nahi
     const existingCustomer = await User.findOne({
       role: { $regex: /^customer$/i },
-      $or: [{ visitorId }, { email: normalizedEmail }],
+      visitorId,
     });
 
     let verifiedCustomerToken = null;

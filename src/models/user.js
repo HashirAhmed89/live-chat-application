@@ -47,6 +47,14 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+userSchema.index(
+  { visitorId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { visitorId: { $type: "string" } },
+  }
+);
+
 const User = mongoose.model(
   "User",
   userSchema

@@ -15,8 +15,20 @@ export const findOrCreateConversation = async ({
     customerId: customerId,
   });
 
+  console.info(
+    JSON.stringify({
+      component: "conversation",
+      stage: "lookup_result",
+      customerId: String(customerId),
+      found: Boolean(conversation),
+      conversationId: conversation ? String(conversation._id) : null,
+    }),
+  );
+
   // If conversation does not exist, create a new one
   if (!conversation) {
+    let recoveredFromDuplicate = false;
+
     try {
       conversation = await Conversation.create({
         customerId: customerId,
@@ -32,12 +44,30 @@ export const findOrCreateConversation = async ({
       if (!conversation) {
         throw error;
       }
+
+      recoveredFromDuplicate = true;
     }
 
-    console.log(`Conversation saved: ${conversation._id}`);
+    console.info(
+      JSON.stringify({
+        component: "conversation",
+        stage: recoveredFromDuplicate
+          ? "recovered_after_duplicate"
+          : "created",
+        customerId: String(customerId),
+        conversationId: String(conversation._id),
+      }),
+    );
   } else {
     // If conversation already exists, use the existing one
-    console.log(`Conversation found: ${conversation._id}`);
+    console.info(
+      JSON.stringify({
+        component: "conversation",
+        stage: "retrieved",
+        customerId: String(customerId),
+        conversationId: String(conversation._id),
+      }),
+    );
   }
 
   // Return the conversation to the controller
